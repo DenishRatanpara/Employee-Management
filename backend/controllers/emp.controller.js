@@ -106,55 +106,6 @@ export const ShowEmployeeController = async (req,res)=>{
 }
 
 
-// export const EmpUpdateController = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const {
-//       name,
-//       email,
-//       phone,
-//       department,
-//       designation,
-//       role,
-//       salary,
-//     } = req.body;
-
-    
-//     const employee = await Employee.findById(_id.id);
-//     if (!employee) {
-//       return res.status(404).json({ message: "Employee not found" });
-//     }
-//     const user=await userModel.findById(_id.employee.userId)
-//    if (!user) {
-//       return res.status(404).json({ message: "user not found" });
-//     }
-  
-//     if (employee.userId) {
-//       await user.findByIdAndUpdate(employee.userId, {
-//         name,
-        
-//       });
-//     }
-
-   
-//     const updatedEmployee = await Employee.findByIdAndUpdate(
-//       _id.id,
-//       {
-//         department,
-//         designation,
-//         role,
-//         salary,
-//       },
-//       { new: true } 
-//     ).populate("userId");
-
-//     res.status(200).json(updatedEmployee);
-//   } catch (error) {
-//     console.error("Update error:", error);
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
 export const EmpUpdateController = async (req, res) => {
   try {
     const { id } = req.params; // employee id from URL
@@ -205,3 +156,23 @@ export const EmpUpdateController = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+export const fatchEmpByDepartmentController = async (req, res) => {
+  const { id } = req.params; // department ID from URL
+
+  try {
+    // Find employees by department ID
+    const employees = await Employee.find({ department: id }).populate("userId");
+
+    if (!employees || employees.length === 0) {
+      return res.status(404).json({ message: "No employees found for this department" });
+    }
+
+    // ✅ Wrap employees in an object
+    res.status(200).json({ employees });
+  } catch (error) {
+    console.error("Error fetching employees by department:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+  

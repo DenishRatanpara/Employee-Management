@@ -39,7 +39,7 @@ function App() {
           <Route path="/admin/employee/view/:id" element={<EmpView />} />
           <Route path="/admin/employee/edit/:id" element={<EmpEdit />} />
           <Route path="/admin/add-employee" element={<AddEmployee />} />
-          <Route path="/admin/salary" element={<AddSalary />} />
+          <Route path="/admin/employee/salary/:id" element={<AddSalary />} />
         </Route>
 
         <Route

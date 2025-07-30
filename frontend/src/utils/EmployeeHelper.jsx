@@ -27,6 +27,38 @@ export const fetchDepartments = async () => {
   }
 };
 
+export const getEmployees = async (id) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/employee/department/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      const employees = response.data.employees;
+
+      if (!Array.isArray(employees)) {
+        console.error("Expected employees to be an array, but got:", employees);
+        return [];
+      }
+
+      console.log("Employees fetched successfully:", employees);
+      return employees;
+    } else {
+      console.error("Failed to fetch employees");
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    return [];
+  }
+};
+
 // Action buttons for each employee row
 const EmployeeButton = ({ id }) => {
   const navigate = useNavigate();

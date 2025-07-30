@@ -11,5 +11,6 @@ router.post('/add',verifyUser,upload.single("photo"),empController.EmpAddControl
 router.get('/',verifyUser,empController.getEmployeeController)
 router.get('/:id',verifyUser,empController.ShowEmployeeController)
 router.put('/update/:id',verifyUser,empController.EmpUpdateController)
+router.get('/department/:id',verifyUser,empController.fatchEmpByDepartmentController)
 
 export default router;
