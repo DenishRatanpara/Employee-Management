@@ -8,6 +8,7 @@ import connectToDatabase from './db/db.js';
 import userRegister from './services/user.service.js';
 import LoginRoute from './routes/user.router.js';
 import addDepartment from './routes/department.js';
+import salaryRouter from './routes/salary.js';
 import empRouter from "./routes/emp.js"
 
 
@@ -23,6 +24,7 @@ app.use('/users',LoginRoute)
 
 app.use('/department',addDepartment)
 app.use('/employee',empRouter);
+app.use('/salary', salaryRouter);
 app.use(express.json());
 app.use(express.static("public/upload"))
 app.use(express.urlencoded({ extended: true }));

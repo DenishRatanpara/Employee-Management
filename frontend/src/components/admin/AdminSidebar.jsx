@@ -9,7 +9,7 @@ import {
   SettingsIcon,
   MenuIcon,
   XIcon,
-} from "lucide-react"; // Optional: lucide-react icons for a modern look
+} from "lucide-react";
 
 const AdminSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
