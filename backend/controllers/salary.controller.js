@@ -1,26 +1,49 @@
 import salaryModel from '../models/salary.model.js';
+import mongoose from 'mongoose';
 
 export const addSalaryController = async (req, res) => {
     try {
+        const { employeeId, basicSalary, allowance = 0, deductions = 0 } = req.body;
 
-        const { employeeId, basicSalary, allowance, deductions } = req.body;
-      const totalSalary = parseInt(basicSalary) +parseInt(allowance) - parseInt(deductions);
+        // Validate employeeId
+        if (!employeeId || !mongoose.Types.ObjectId.isValid(employeeId)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or missing employeeId.",
+            });
+        }
+
+        // Ensure numeric values
+        const parsedBasic = Number(basicSalary);
+        const parsedAllowance = Number(allowance);
+        const parsedDeductions = Number(deductions);
+
+        if (isNaN(parsedBasic) || isNaN(parsedAllowance) || isNaN(parsedDeductions)) {
+            return res.status(400).json({
+                success: false,
+                message: "Salary, allowance, and deductions must be valid numbers.",
+            });
+        }
+
+        const netSalary = parsedBasic + parsedAllowance - parsedDeductions;
+
         const newSalary = new salaryModel({
             employeeId,
-            basicSalary,
-            allowance,
-            deductions,
-            netSalary : totalSalary,
-            paymentDate: new Date()
-        }); 
+            basicSalary: parsedBasic,
+            allowance: parsedAllowance,
+            deductions: parsedDeductions,
+            netSalary,
+            paymentDate: new Date(),
+        });
+
         await newSalary.save();
 
         res.status(201).json({
             success: true,
             message: "Salary added successfully",
-            data: newSalary
+          
         });
-        
+
     } catch (error) {
         console.error("Error adding salary:", error);
         res.status(500).json({
@@ -28,7 +51,5 @@ export const addSalaryController = async (req, res) => {
             message: "Failed to add salary",
             error: error.message
         });
-
-        
     }
-}
+};

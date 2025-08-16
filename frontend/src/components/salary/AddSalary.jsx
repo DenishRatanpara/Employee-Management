@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchDepartments } from "../../utils/EmployeeHelper";
-import { getEmployees } from "../../utils/EmployeeHelper";
+import { fetchDepartments, getEmployees } from "../../utils/EmployeeHelper";
 import axios from "axios";
 
 const AddSalary = () => {
@@ -9,36 +8,17 @@ const AddSalary = () => {
   const [departments, setDepartments] = useState([]);
   const [formData, setFormData] = useState({
     department: "",
-    employee: "",
-    allowance: "",
-    payDate: "",
+    employeeId: "",
     basicSalary: "",
-    deductions: "",
+    allowance: 0,
+    deductions: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleDepartmentChange = async (e) => {
-    const selectedDept = e.target.value;
-    try {
-      setIsLoading(true);
-      const emps = await getEmployees(selectedDept);
-      setEmployees(emps);
-      setFormData((prev) => ({
-        ...prev,
-        department: selectedDept,
-        employee: "", // Reset employee when department changes
-      }));
-    } catch (err) {
-      setError("Failed to fetch employees for selected department");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+  // Fetch departments on mount
   useEffect(() => {
     const getDepartments = async () => {
       try {
@@ -55,6 +35,26 @@ const AddSalary = () => {
     getDepartments();
   }, []);
 
+  const handleDepartmentChange = async (e) => {
+    const selectedDept = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      department: selectedDept,
+      employeeId: "",
+    }));
+
+    try {
+      setIsLoading(true);
+      const emps = await getEmployees(selectedDept);
+      setEmployees(emps);
+    } catch (err) {
+      setError("Failed to fetch employees for selected department");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -62,22 +62,35 @@ const AddSalary = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
       setIsLoading(true);
+      const payload = {
+        employeeId: formData.employeeId,
+        basicSalary: Number(formData.basicSalary),
+        allowance: Number(formData.allowance),
+        deductions: Number(formData.deductions),
+      };
 
-      await axios.post("http://localhost:4000/salary/add", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        "http://localhost:4000/salary/add",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("Salary Data:", formData);
-      // Optionally navigate after successful submission
-      // navigate('/salaries');
+      if (res.data.success) {
+        navigate("/salary"); // or wherever you list salaries
+      } else {
+        setError("Failed to add salary. Try again.");
+      }
     } catch (err) {
-      setError("Failed to submit salary data");
       console.error(err);
+      setError(err?.response?.data?.message || "Something went wrong!");
     } finally {
       setIsLoading(false);
     }
@@ -101,11 +114,11 @@ const AddSalary = () => {
           <label className="w-32 text-gray-700 font-medium">Department</label>
           <select
             name="department"
-            value={formData.department}
             onChange={handleDepartmentChange}
             required
             disabled={isLoading}
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 border rounded-lg"
+            value={formData.department}
           >
             <option value="">Select Department</option>
             {departments.map((dep) => (
@@ -120,48 +133,20 @@ const AddSalary = () => {
         <div className="flex items-center space-x-6">
           <label className="w-32 text-gray-700 font-medium">Employee</label>
           <select
-            name="employee"
-            value={formData.employee}
+            name="employeeId"
             onChange={handleChange}
             required
             disabled={!formData.department || isLoading}
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 border rounded-lg"
+            value={formData.employeeId}
           >
             <option value="">Select Employee</option>
             {employees.map((emp) => (
               <option key={emp._id} value={emp._id}>
-                {emp.userId.name || emp.id}{" "}
-                {/* Display name if available, otherwise ID */}
+                {emp.employeeId || emp.name}
               </option>
             ))}
           </select>
-        </div>
-
-        {/* Allowance */}
-        <div className="flex items-center space-x-6">
-          <label className="w-32 text-gray-700 font-medium">Allowance</label>
-          <input
-            type="number"
-            name="allowance"
-            value={formData.allowance}
-            onChange={handleChange}
-            min="0"
-            step="0.01"
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Pay Date */}
-        <div className="flex items-center space-x-6">
-          <label className="w-32 text-gray-700 font-medium">Pay Date</label>
-          <input
-            type="date"
-            name="payDate"
-            value={formData.payDate}
-            onChange={handleChange}
-            required
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
         </div>
 
         {/* Basic Salary */}
@@ -170,25 +155,49 @@ const AddSalary = () => {
           <input
             type="number"
             name="basicSalary"
-            value={formData.basicSalary}
             onChange={handleChange}
+            value={formData.basicSalary}
             required
             min="0"
             step="0.01"
-            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 px-4 py-2 border rounded-lg"
           />
         </div>
 
-        {/* Deduction */}
+        {/* Allowance */}
         <div className="flex items-center space-x-6">
-          <label className="w-32 text-gray-700 font-medium">Deduction</label>
+          <label className="w-32 text-gray-700 font-medium">Allowance</label>
           <input
             type="number"
-            name="deduction"
-            value={formData.deduction}
+            name="allowance"
             onChange={handleChange}
+            value={formData.allowance}
             min="0"
             step="0.01"
+            className="flex-1 px-4 py-2 border rounded-lg"
+          />
+        </div>
+
+        {/* Deductions */}
+        <div className="flex items-center space-x-6">
+          <label className="w-32 text-gray-700 font-medium">Deductions</label>
+          <input
+            type="number"
+            name="deductions"
+            onChange={handleChange}
+            value={formData.deductions}
+            min="0"
+            step="0.01"
+            className="flex-1 px-4 py-2 border rounded-lg"
+          />
+        </div>
+        <div className="flex items-center space-x-6">
+          <label className="w-32 text-gray-700 font-medium">Pay Date</label>
+          <input
+            type="date"
+            name="payDate"
+            onChange={handleChange}
+            required
             className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

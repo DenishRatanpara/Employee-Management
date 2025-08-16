@@ -27,7 +27,11 @@ const AdminSidebar = () => {
       icon: <CalendarCheck2Icon size={20} />,
       to: "/admin/leave",
     },
-    { name: "Salary", icon: <WalletIcon size={20} />, to: "/admin/salary" },
+    {
+      name: "Salary",
+      icon: <WalletIcon size={20} />,
+      to: "/admin/employee/salary/add",
+    },
     {
       name: "Settings",
       icon: <SettingsIcon size={20} />,

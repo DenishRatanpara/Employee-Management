@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { Schema } from "mongoose";
 const salarySchema = new mongoose.Schema({
     employeeId: {
         type: mongoose.Schema.Types.ObjectId, required:true,ref:'Employee',
