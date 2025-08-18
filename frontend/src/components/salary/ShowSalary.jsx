@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ShowSalary = () => {
-  // Example salary history data
-
+  const [salary, setSalary] = useState([]);
   const [search, setSearch] = useState("");
+  const { id } = useParams();
 
-  // Format date as "12 Aug 2024"
+  // Format date as "12 Aug 2025"
   const formatDate = (dateStr) => {
+    if (!dateStr) return "-";
     const date = new Date(dateStr);
+    if (isNaN(date)) return dateStr;
     return date.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",
@@ -15,9 +19,28 @@ const ShowSalary = () => {
     });
   };
 
-  const filteredData = salaryHistory.filter((item) =>
-    item.payDate.includes(search)
+  // Filter by paymentDate
+  const filteredData = salary.filter((item) =>
+    item.paymentDate?.toLowerCase().includes(search.toLowerCase())
   );
+
+  useEffect(() => {
+    const fetchSalary = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/salary/show/${id}`);
+        console.log(res.data.salary);
+        if (res.data && res.data.salary) {
+          setSalary(res.data.salary);
+        } else {
+          setSalary([]);
+        }
+      } catch (error) {
+        console.error("Error fetching salary:", error);
+        setSalary([]);
+      }
+    };
+    fetchSalary();
+  }, [id]);
 
   return (
     <div className="max-w-6xl mx-auto p-8 bg-base-100 rounded-2xl shadow-lg border border-gray-200">
@@ -27,8 +50,11 @@ const ShowSalary = () => {
           💼 Salary History
         </h1>
         <p className="mt-2 text-lg text-gray-600">
-          Employee: <span className="font-semibold">John Doe</span> (ID:
-          EMP-001)
+          Employee:{" "}
+          <span className="font-semibold">
+            {salary[0]?.employeeId?.employeeId || "Unknown"}
+          </span>{" "}
+          (ID: {salary[0]?._id || "N/A"})
         </p>
       </div>
 
@@ -36,7 +62,7 @@ const ShowSalary = () => {
       <div className="flex items-center gap-3 mb-6">
         <input
           type="text"
-          placeholder="Search by Pay Date (YYYY-MM-DD)"
+          placeholder="Search by Payment Date (YYYY-MM-DD)"
           className="input input-bordered input-primary w-full shadow-sm"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -56,34 +82,40 @@ const ShowSalary = () => {
             <tr className="bg-primary text-zinc-950 text-lg">
               <th>S.No</th>
               <th>Employee ID</th>
-              <th>Salary (₹)</th>
+              <th>Basic Salary (₹)</th>
               <th>Allowance (₹)</th>
-              <th>Deduction (₹)</th>
-              <th>Total (₹)</th>
-              <th>Pay Date</th>
+              <th>Deductions (₹)</th>
+              <th>Net Salary (₹)</th>
+              <th>Payment Date</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((item, index) => {
-                const total = item.salary + item.allowance - item.deduction;
+                const total =
+                  (item.basicSalary || 0) +
+                  (item.allowance || 0) -
+                  (item.deductions || 0);
                 return (
-                  <tr key={item.id} className="hover:bg-primary/10 transition">
+                  <tr
+                    key={item._id || index}
+                    className="hover:bg-primary/10 transition"
+                  >
                     <td>{index + 1}</td>
-                    <td>{item.empId}</td>
+                    <td>{item.employeeId?.employeeId || "-"}</td>
                     <td className="text-green-600 font-semibold">
-                      ₹{item.salary.toLocaleString()}
+                      ₹{(item.basicSalary || 0).toLocaleString()}
                     </td>
                     <td className="text-blue-600 font-semibold">
-                      ₹{item.allowance.toLocaleString()}
+                      ₹{(item.allowance || 0).toLocaleString()}
                     </td>
                     <td className="text-red-600 font-semibold">
-                      ₹{item.deduction.toLocaleString()}
+                      ₹{(item.deductions || 0).toLocaleString()}
                     </td>
                     <td className="text-purple-600 font-bold">
                       ₹{total.toLocaleString()}
                     </td>
-                    <td>{formatDate(item.payDate)}</td>
+                    <td>{formatDate(item.paymentDate)}</td>
                   </tr>
                 );
               })

@@ -34,7 +34,6 @@ const EmployeeList = () => {
           },
         });
 
-        console.log(response.data);
         if (response.status === 200) {
           const data = response.data.map((emp) => ({
             _id: emp._id,
