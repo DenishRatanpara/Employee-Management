@@ -1,54 +1,58 @@
 import React from "react";
 import {
-  UsersIcon,
-  Building2Icon,
-  CalendarClockIcon,
+  UserIcon,
+  CalendarCheck2Icon,
   WalletIcon,
-  SettingsIcon,
+  BriefcaseIcon,
+  AwardIcon,
 } from "lucide-react";
 
 const stats = [
   {
-    title: "Total Employees",
-    value: 120,
-    icon: <UsersIcon size={28} />,
+    title: "My Attendance",
+    value: "95%",
+    icon: <UserIcon size={28} />,
     bg: "bg-indigo-500",
   },
   {
-    title: "Departments",
-    value: 8,
-    icon: <Building2Icon size={28} />,
+    title: "Leaves Taken",
+    value: 12,
+    icon: <CalendarCheck2Icon size={28} />,
     bg: "bg-green-500",
   },
   {
-    title: "Pending Leaves",
-    value: 5,
-    icon: <CalendarClockIcon size={28} />,
+    title: "Remaining Leaves",
+    value: 8,
+    icon: <CalendarCheck2Icon size={28} />,
     bg: "bg-yellow-500",
   },
   {
-    title: "Monthly Salary Paid",
-    value: "₹8.5L",
+    title: "Monthly Salary",
+    value: "₹55,000",
     icon: <WalletIcon size={28} />,
     bg: "bg-purple-500",
   },
   {
-    title: "Settings Accessed",
-    value: 14,
-    icon: <SettingsIcon size={28} />,
-    bg: "bg-red-500",
+    title: "Projects Assigned",
+    value: 3,
+    icon: <BriefcaseIcon size={28} />,
+    bg: "bg-blue-500",
+  },
+  {
+    title: "Performance Rating",
+    value: "⭐ 4.5",
+    icon: <AwardIcon size={28} />,
+    bg: "bg-pink-500",
   },
 ];
 
-const AdminSummery = () => {
+const EmployeeSummary = () => {
   return (
     <div className="p-4">
       {/* Header */}
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Dashboard Overview
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">My Summary</h1>
 
-      {/* Summary Cards - Flex Layout */}
+      {/* Summary Cards */}
       <div className="flex flex-wrap gap-6">
         {stats.map((item, idx) => (
           <div
@@ -73,4 +77,4 @@ const AdminSummery = () => {
   );
 };
 
-export default AdminSummery;
+export default EmployeeSummary;

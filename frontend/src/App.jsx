@@ -14,6 +14,7 @@ import EmpView from "./components/employee/EmpView";
 import EmpEdit from "./components/employee/EmpEdit";
 import AddSalary from "./components/salary/AddSalary";
 import ShowSalary from "./components/salary/ShowSalary";
+import EmployeeSummary from "./components/EmployeeDashboard/EmployeeSummery";
 
 function App() {
   return (
@@ -49,7 +50,20 @@ function App() {
           element={<div className="text-red-500">Unauthorized Access</div>}
         />
 
-        <Route path="/emp" element={<EmployeeDashboard />} />
+        <Route
+          path="/emp"
+          element={
+            <PrivateRoute>
+              <RoleBaseRoute requiredRole={["employee"]}>
+                <EmployeeDashboard></EmployeeDashboard>
+              </RoleBaseRoute>
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<EmployeeSummary />} />
+          <Route path="/emp/dashboard" element={<EmployeeSummary />} />
+          <Route path="/emp/profile/:id" element={<EmpView />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

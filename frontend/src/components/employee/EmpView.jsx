@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import "./EmpView.css"; // 👈 Import external CSS
 
 const EmpView = () => {
   const { id } = useParams();
@@ -20,13 +21,12 @@ const EmpView = () => {
         );
 
         if (response.status === 200) {
-          setEmployee(response.data);
-          console.log(response.data);
+          setEmployee(response.data.employee);
         } else {
-          console.error("Failed to fetch department");
+          console.error("Failed to fetch employee");
         }
       } catch (error) {
-        console.error("Error fetching department:", error);
+        console.error("Error fetching employee:", error);
       }
     };
 
@@ -35,15 +35,17 @@ const EmpView = () => {
 
   if (!employee) {
     return (
-      <div className="text-center text-gray-500 mt-10">
-        Loading employee details...
+      <div className="flex justify-center items-center h-screen">
+        <p className="animate-pulse text-lg font-medium text-indigo-600">
+          Loading employee details...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-200  py-10 px-4">
-      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 sm:p-12 transition-all duration-300">
+    <div className="emp-view bg-gradient-to-br from-gray-100 to-gray-200 py-10 px-4">
+      <div className="emp-card max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 sm:p-12 transition-all duration-300">
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center gap-8">
           <img
@@ -51,15 +53,19 @@ const EmpView = () => {
               employee.userId?.profileImage || "default.jpg"
             }`}
             alt="Employee"
-            className="w-36 h-36 rounded-full object-cover border-4 border-indigo-500 shadow-md hover:scale-105 transition-transform duration-300"
+            className="emp-avatar w-36 h-36 rounded-full object-cover border-4 border-indigo-500 shadow-md hover:scale-105 transition-transform duration-300"
           />
           <div className="text-center sm:text-left space-y-1">
-            <h2 className="text-3xl font-bold text-gray-800">
-              {employee.empname}
+            <h2 className="emp-name text-3xl font-bold text-gray-800">
+              {employee.userId?.name}
             </h2>
             <p className="text-sm text-gray-600">
               <span className="font-medium">Department:</span>{" "}
-              {employee.department.departmentName}
+              {employee.department?.departmentName}
+            </p>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Designation:</span>{" "}
+              {employee.designation}
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-medium">DOB:</span>{" "}
@@ -71,7 +77,7 @@ const EmpView = () => {
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-medium">Email:</span>{" "}
-              {employee.userId.email}
+              {employee.userId?.email}
             </p>
             <p className="text-sm text-gray-600">
               <span className="font-medium">Phone:</span> {employee.phone}
@@ -81,7 +87,7 @@ const EmpView = () => {
 
         {/* Additional Info */}
         <div className="mt-10 border-t pt-6">
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">
+          <h3 className="emp-section-title text-xl font-semibold text-gray-700 mb-3">
             Additional Information
           </h3>
           <ul className="text-sm text-gray-700 list-disc list-inside space-y-1 pl-2">
@@ -89,7 +95,13 @@ const EmpView = () => {
               <span className="font-medium">Employee ID:</span>{" "}
               {employee.employeeId}
             </li>
-            {/* Add more fields here if needed */}
+            <li>
+              <span className="font-medium">Salary:</span> ₹
+              {employee.salary.toLocaleString()}
+            </li>
+            <li>
+              <span className="font-medium">Gender:</span> {employee.gender}
+            </li>
           </ul>
         </div>
       </div>

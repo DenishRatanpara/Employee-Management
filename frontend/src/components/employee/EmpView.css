@@ -1,0 +1,98 @@
+/* ========================
+   Scoped CSS for EmpView
+   ======================== */
+.emp-view {
+  /* Background animation */
+  animation: gradientShift 10s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: left top;
+  }
+  50% {
+    background-position: right bottom;
+  }
+  100% {
+    background-position: left top;
+  }
+}
+
+/* Card hover floating effect */
+.emp-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.emp-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile image glow */
+.emp-avatar {
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.7); /* Indigo glow */
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+.emp-avatar:hover {
+  box-shadow: 0 0 25px rgba(79, 70, 229, 1);
+  transform: scale(1.08) rotate(2deg);
+}
+
+/* Heading gradient animation */
+.emp-name {
+  background: linear-gradient(90deg, #4f46e5, #9333ea, #f43f5e);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  animation: shineText 4s linear infinite;
+}
+
+@keyframes shineText {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Section titles underline animation */
+.emp-section-title {
+  position: relative;
+  display: inline-block;
+}
+.emp-section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, #ec4899, #facc15);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+}
+.emp-section-title:hover::after {
+  transform: scaleX(1);
+}
+
+/* List items fade-in */
+.emp-view ul li {
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: fadeInRight 0.6s forwards;
+}
+.emp-view ul li:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.emp-view ul li:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.emp-view ul li:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -92,18 +92,35 @@ export const getEmployeeController = async (req,res)=>{
     }
 
 }
-export const ShowEmployeeController = async (req,res)=>{
-  const {id}=req.params;
-   try {
-        const employees = await Employee.findById({_id:id}).populate("userId").populate("department");
-        res.status(200).json(employees);
-    } catch (error) {
+export const ShowEmployeeController = async (req, res) => {
+  const { id } = req.params;
 
-        console.error("Error fetching Employee:", error);
-        res.status(500).json({ message: "Internal server error" });
+  try {
+    let employee = await Employee.findById(id)
+      .populate("userId", { password: 0 }) // ✅ fixed spelling
+      .populate("department");
+
+    // If not found by _id, try finding by userId
+    if (!employee) {
+      employee = await Employee.findOne({ userId: id })
+        .populate("userId", { password: 0 })
+        .populate("department");
     }
 
-}
+    // If still not found
+    if (!employee) {
+      return res.status(404).json({ success: false, message: "Employee not found" });
+    }
+
+    // ✅ Send response only ONCE
+    return res.status(200).json({ success: true, employee });
+
+  } catch (error) {
+    console.error("Error fetching Employee:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 
 
 export const EmpUpdateController = async (req, res) => {
