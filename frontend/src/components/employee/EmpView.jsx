@@ -45,7 +45,7 @@ const EmpView = () => {
 
   return (
     <div className="emp-view bg-gradient-to-br from-gray-100 to-gray-200 py-10 px-4">
-      <div className="emp-card max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 sm:p-12 transition-all duration-300">
+      <div className="emp-card  max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 sm:p-12 transition-all duration-300">
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center gap-8">
           <img

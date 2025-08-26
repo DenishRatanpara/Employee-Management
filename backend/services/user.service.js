@@ -4,19 +4,24 @@ import bcrypt from 'bcryptjs';
 const userRegister = async () => {
   try {
     // Check if admin user already exists
-    const existingUser = await User.findOne({ email: "admin@a.com" });
+    const existingUser = await User.findOne({ email: "denish@d.com" });
 
     if (existingUser) {
       console.log("Admin user already exists.");
       return; // Exit the function if user exists
     }
 
-    const hashedPassword = await bcrypt.hash("admin", 10);
+    const hashedPassword = await bcrypt.hash("denish", 10);
     const newUser = new User({
-      name: "Admin",
-      email: "admin@a.com",
+      // name: "Admin",
+      // email: "admin@a.com",
+      // password: hashedPassword,
+      // role: "admin",
+       name: "Admin",
+      email: "denish@d.com",
       password: hashedPassword,
       role: "admin"
+
     });
 
     await newUser.save();
