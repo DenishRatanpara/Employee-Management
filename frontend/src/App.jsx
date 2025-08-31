@@ -15,6 +15,8 @@ import EmpEdit from "./components/employee/EmpEdit";
 import AddSalary from "./components/salary/AddSalary";
 import ShowSalary from "./components/salary/ShowSalary";
 import EmployeeSummary from "./components/EmployeeDashboard/EmployeeSummery";
+import LeaveList from "./components/EmployeeDashboard/LeaveList";
+import AddLeave from "./components/EmployeeDashboard/AddLeave";
 
 function App() {
   return (
@@ -63,6 +65,8 @@ function App() {
           <Route index element={<EmployeeSummary />} />
           <Route path="/emp/dashboard" element={<EmployeeSummary />} />
           <Route path="/emp/profile/:id" element={<EmpView />} />
+          <Route path="/emp/leave/" element={<LeaveList />} />
+          <Route path="/emp/add-leave" element={<AddLeave />} />
         </Route>
       </Routes>
     </BrowserRouter>

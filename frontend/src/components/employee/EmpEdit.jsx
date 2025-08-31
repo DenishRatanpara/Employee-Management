@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+<<<<<<< HEAD
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 import api from "../../../api";
+=======
+
+import axios from "axios";
+import { fetchDepartments } from "../../utils/EmployeeHelper";
+>>>>>>> 4bb929cc08404bbaadf32b02a88520d0ae01e6f8
 
 const EmpEdit = () => {
-  const [departments, setDepartments] = useState(null);
+  const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -20,6 +26,8 @@ const EmpEdit = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Employee ID:", id);
+
     const fetchEmployee = async () => {
       try {
         const response = await api.get(
@@ -31,25 +39,25 @@ const EmpEdit = () => {
             },
           }
         );
+        console.log("API Response:", response);
 
         if (response.status === 200) {
-          const emp = response.data;
-          setEmployee(emp);
+          const emp = response.data.employee;
+          console.log("Parsed Employee:", emp);
 
+          setEmployee(emp);
           setFormData({
             name: emp.userId?.name || "",
             email: emp.userId?.email || "",
             phone: emp.userId?.phone || "",
             department: emp.department?._id || "",
             designation: emp.designation || "",
-            role: emp.userId.role || "",
+            role: emp.userId?.role || "",
             salary: emp.salary || "",
           });
-        } else {
-          console.error("Failed to fetch Employee");
         }
       } catch (error) {
-        console.error("Error fetching Employee:", error);
+        console.error("Error fetching Employee:", error.response || error);
       }
     };
 
@@ -74,19 +82,15 @@ const EmpEdit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataObj = new FormData();
-
-    Object.keys(formData).forEach((key) => {
-      formDataObj.append(key, formData[key]);
-    });
 
     try {
       const response = await axios.put(
-        `http://localhost:4000/employee/update/${id}`, // Assuming PUT for update
-        formData,
+        `http://localhost:4000/employee/update/${id}`,
+        formData, // send JSON
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -144,6 +148,20 @@ const EmpEdit = () => {
             </div>
 
             {/* Phone */}
+            <div className="w-full md:w-[48%]">
+              <label className="block text-gray-700 font-medium mb-1">
+                Phone *
+              </label>
+              <input
+                type="tel"
+                value={formData.phone}
+                name="phone"
+                onChange={handleChange}
+                required
+                placeholder="+91 9876543210"
+                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+            </div>
 
             {/* Department */}
             <div className="w-full md:w-[48%]">
@@ -158,7 +176,7 @@ const EmpEdit = () => {
                 className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
               >
                 <option value="">Select Department</option>
-                {departments.map((dep, _id) => (
+                {departments.map((dep) => (
                   <option key={dep._id} value={dep._id}>
                     {dep.name}
                   </option>
@@ -169,7 +187,7 @@ const EmpEdit = () => {
             {/* Designation */}
             <div className="w-full md:w-[48%]">
               <label className="block text-gray-700 font-medium mb-1">
-                Designation
+                Designation *
               </label>
               <input
                 type="text"
@@ -182,6 +200,23 @@ const EmpEdit = () => {
             </div>
 
             {/* Role */}
+            {/* <div className="w-full md:w-[48%]">
+              <label className="block text-gray-700 font-medium mb-1">
+                Role *
+              </label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 outline-none"
+              >
+                <option value="">Select Role</option>
+                <option value="admin">Admin</option>
+
+                <option value="employee">Employee</option>
+              </select>
+            </div> */}
 
             {/* Salary */}
             <div className="w-full md:w-[48%]">

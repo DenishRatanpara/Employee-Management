@@ -10,7 +10,11 @@ import LoginRoute from './routes/user.router.js';
 import addDepartment from './routes/department.js';
 import salaryRouter from './routes/salary.js';
 import empRouter from "./routes/emp.js"
+<<<<<<< HEAD
 import cookieParser from 'cookie-parser';
+=======
+import leaveRouter from "./routes/leave.js"
+>>>>>>> 4bb929cc08404bbaadf32b02a88520d0ae01e6f8
 
 
 connectToDatabase();
@@ -30,6 +34,13 @@ app.use(cors({
 }));
 
 
+<<<<<<< HEAD
+=======
+app.use('/department',addDepartment)
+app.use('/employee',empRouter);
+app.use('/salary', salaryRouter);
+app.use('/leave',leaveRouter)
+>>>>>>> 4bb929cc08404bbaadf32b02a88520d0ae01e6f8
 app.use(express.json());
 app.use(express.static("public/upload"))
 app.use(express.urlencoded({ extended: true }));
