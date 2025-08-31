@@ -56,7 +56,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const response = await api.get("/users/verify");
+        const response = await api.get("/users");
         setUser(response.data.user || null);
       } catch {
         setUser(null);
