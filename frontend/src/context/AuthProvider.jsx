@@ -3,29 +3,61 @@ import api from "../../api";
 
 const UserContext = createContext();
 
+
+
 const AuthProvider = ({ children }) => {
+ 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Setup Axios Interceptors (only once)
   useEffect(() => {
-  const verifyUser = async () => {
-    try {
-      const response = await api.get("/users/verify"); // api instance with interceptor
-      setUser(response.data.user || null);
-    } catch (err) {
-      setUser(null);
-    } finally {
-      setLoading(false);
+    // Attach token to every request
+    api.interceptors.request.use((config) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    });
+
+    // Auto logout if token is invalid/expired
+    api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          logout();
+        // redirect to login
+        }
+        return Promise.reject(error);
+      }
+    );
+  }, []);
+
+  // ✅ Verify user when app starts
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        const response = await api.get("/users/verify");
+        setUser(response.data.user || null);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    verifyUser();
+  }, []);
+
+  // ✅ Save user + token on login
+  const login = (user, token) => {
+    setUser(user);
+    if (token) {
+      localStorage.setItem("token", token);
     }
   };
-  verifyUser();
-}, []);
 
-
-  const login = (user) => {
-    setUser(user);
-  };
-
+  // ✅ Clear user + token on logout
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
