@@ -65,7 +65,7 @@ function App() {
           <Route index element={<EmployeeSummary />} />
           <Route path="/emp/dashboard" element={<EmployeeSummary />} />
           <Route path="/emp/profile/:id" element={<EmpView />} />
-          <Route path="/emp/leave" element={<LeaveList />} />
+          <Route path="/emp/leave/" element={<LeaveList />} />
           <Route path="/emp/add-leave" element={<AddLeave />} />
         </Route>
       </Routes>

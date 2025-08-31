@@ -1,52 +1,48 @@
-import React, { useState } from "react";
-import { Plus } from "lucide-react"; // modern icon
+import React, { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../../context/AuthProvider";
 
 const LeaveList = () => {
   const [search, setSearch] = useState("");
+  const [leaves, setLeaves] = useState([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const leaves = [
-    {
-      id: 1,
-      name: "John Doe",
-      type: "Sick Leave",
-      from: "2025-08-01",
-      to: "2025-08-03",
-      status: "Approved",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      type: "Casual Leave",
-      from: "2025-08-05",
-      to: "2025-08-06",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      name: "Mike Johnson",
-      type: "Annual Leave",
-      from: "2025-08-10",
-      to: "2025-08-20",
-      status: "Rejected",
-    },
-    {
-      id: 4,
-      name: "Emily Brown",
-      type: "Maternity Leave",
-      from: "2025-08-15",
-      to: "2025-09-15",
-      status: "Approved",
-    },
-  ];
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/leave/show/${user._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setLeaves(response.data.leaves);
+        console.log(response.data.leaves);
+      } catch (error) {
+        console.error("Error fetching leaves:", error);
+        toast.error("Failed to fetch leaves");
+      }
+    };
+    fetchLeaves();
+  }, []);
 
+  // filter
   const filteredLeaves = leaves.filter(
     (leave) =>
-      leave.name.toLowerCase().includes(search.toLowerCase()) ||
-      leave.type.toLowerCase().includes(search.toLowerCase()) ||
-      leave.status.toLowerCase().includes(search.toLowerCase())
+      leave.name?.toLowerCase().includes(search.toLowerCase()) ||
+      leave.leaveType?.toLowerCase().includes(search.toLowerCase()) ||
+      leave.status?.toLowerCase().includes(search.toLowerCase())
   );
+
+  // format date helper
+  const formatDate = (dateStr) =>
+    dateStr ? new Date(dateStr).toLocaleDateString("en-GB") : "-";
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -66,18 +62,8 @@ const LeaveList = () => {
         </div>
 
         {/* Search */}
-        {/* <div className="mb-6 p-3 m-3 ">
-          <input
-            type="text"
-            placeholder="Search by name, type, or status..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input input-bordered w-full max-w-lg rounded-xl shadow-sm focus:ring focus:ring-primary"
-          />
-        </div> */}
         <div className="mb-6 p-3 m-3 flex justify-center">
           <div className="relative w-full max-w-lg">
-            {/* Search Icon */}
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +81,6 @@ const LeaveList = () => {
               </svg>
             </span>
 
-            {/* Input Box */}
             <input
               type="text"
               placeholder="Search by name, type, or status..."
@@ -122,12 +107,12 @@ const LeaveList = () => {
             <tbody>
               {filteredLeaves.length > 0 ? (
                 filteredLeaves.map((leave, index) => (
-                  <tr key={leave.id} className="hover:bg-gray-50 transition">
+                  <tr key={leave._id} className="hover:bg-gray-50 transition">
                     <td className="py-3 px-4 font-medium">{index + 1}</td>
                     <td className="py-3 px-4">{leave.name}</td>
-                    <td className="py-3 px-4">{leave.type}</td>
-                    <td className="py-3 px-4">{leave.from}</td>
-                    <td className="py-3 px-4">{leave.to}</td>
+                    <td className="py-3 px-4">{leave.leaveType}</td>
+                    <td className="py-3 px-4">{formatDate(leave.fromDate)}</td>
+                    <td className="py-3 px-4">{formatDate(leave.toDate)}</td>
                     <td className="py-3 px-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${
