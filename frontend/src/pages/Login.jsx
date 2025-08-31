@@ -91,9 +91,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="text-right text-sm text-blue-600 hover:underline cursor-pointer">
-            Forgot password?
-          </div>
+         
 
           <button
             type="submit"
@@ -102,13 +100,6 @@ const Login = () => {
             Sign In
           </button>
         </form>
-
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Don’t have an account?{" "}
-          <span className="text-blue-600 font-medium hover:underline cursor-pointer">
-            Sign up
-          </span>
-        </p>
       </div>
     </div>
   );
