@@ -26,18 +26,21 @@ app.use(cookieParser());
 
 
 
-app.use(
-  cors({
-    origin: process.env.VITE_CLIENT_URL || "", // ✅ uses env variable
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173", // for local dev
+    "https://employee-management-frontend-ekvj.onrender.com" // deployed frontend
+  ],
+  credentials: true, // if you are sending cookies or authorization headers
+}));
 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public/upload"));
-
+app.get("/test", (req, res) => {
+  res.json({ message: "CORS is working!" });
+});
 // Routes
 app.use("/users", LoginRoute);
 app.use("/department", addDepartment);
