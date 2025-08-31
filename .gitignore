@@ -1,3 +1,16 @@
-node_modules
-env
+# Ignore environment files
 .env
+
+# Ignore node_modules (if using Node.js)
+node_modules/
+
+# Ignore build artifacts
+dist/
+build/
+
+# Ignore log files
+*.log
+
+# Ignore system files
+.DS_Store
+Thumbs.db
