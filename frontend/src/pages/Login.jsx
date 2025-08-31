@@ -52,6 +52,7 @@ const Login = () => {
           <div className="mb-4 text-red-600 text-sm font-medium text-center bg-red-100 p-2 rounded">
             {error}
           </div>
+
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
