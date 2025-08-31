@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import api from '../../api.js'
+import api from "../../api";
 import { useAuth } from "../context/AuthProvider";
-
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -9,7 +8,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const { login } = useAuth();
-
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,8 +20,13 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+
       console.log(res.data);
-      login(res.data.user);
+
+      // ✅ Save user + token in context + localStorage
+      login(res.data.user, res.data.token);
+
+      // ✅ Redirect based on role
       if (res.data.user.role === "admin") {
         navigate("/admin");
       } else {
@@ -45,7 +48,6 @@ const Login = () => {
           Welcome Back
         </h2>
 
-        {/* Error message */}
         {error && (
           <div className="mb-4 text-red-600 text-sm font-medium text-center bg-red-100 p-2 rounded">
             {error}
@@ -67,6 +69,7 @@ const Login = () => {
               id="email"
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-500"
               placeholder="you@example.com"
+              required
             />
           </div>
 
@@ -84,6 +87,7 @@ const Login = () => {
               id="password"
               className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500"
               placeholder="••••••••"
+              required
             />
           </div>
 
@@ -93,7 +97,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full     bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out"
+            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out"
           >
             Sign In
           </button>

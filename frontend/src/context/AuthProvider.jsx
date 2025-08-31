@@ -1,14 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import api from "../../api";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
-
-
 const AuthProvider = ({ children }) => {
- 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // ✅ Setup Axios Interceptors (only once)
   useEffect(() => {
@@ -27,7 +26,7 @@ const AuthProvider = ({ children }) => {
       (error) => {
         if (error.response?.status === 401) {
           logout();
-        // redirect to login
+          navigate("/"); // redirect to login
         }
         return Promise.reject(error);
       }
