@@ -23,12 +23,17 @@ const app = express();
 
 // Middleware
 app.use(cookieParser());
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "", // ✅ works locally & deployed
+    origin: process.env.VITE_CLIENT_URL || "", // ✅ uses env variable
     credentials: true,
   })
 );
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
