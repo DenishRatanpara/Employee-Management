@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: "https://employee-management-n56p.onrender.com",
-    withCredentials: true
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
 })
 
 export default api
