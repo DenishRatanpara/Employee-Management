@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
-import axios from "axios";
+import api from "../../../api";
 
 const EmpEdit = () => {
   const [departments, setDepartments] = useState(null);
@@ -22,8 +22,8 @@ const EmpEdit = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/employee/${id}`,
+        const response = await api.get(
+          `/employee/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api";
 
 const UserContext = createContext();
 
@@ -8,39 +8,19 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const verifyUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setUser(null);
-        setLoading(false); // ✅ Must set loading to false here
-        return;
-      }
+  const verifyUser = async () => {
+    try {
+      const response = await api.get("/users/verify"); // api instance with interceptor
+      setUser(response.data.user || null);
+    } catch (err) {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  verifyUser();
+}, []);
 
-      try {
-        const response = await axios.get("http://localhost:4000/users/verify", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (response.data.user) {
-          setUser(response.data.user);
-          console.log("User verified:", response.data.user);
-        } else {
-          setUser(null);
-          console.error("User verification failed");
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setUser(null);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    verifyUser();
-  }, []);
 
   const login = (user) => {
     setUser(user);

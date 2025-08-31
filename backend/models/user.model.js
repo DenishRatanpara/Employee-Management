@@ -25,7 +25,9 @@ const userSchema=new mongoose.Schema({
     profileImage:{
         type:String,
     },
-   
+    refreshToken: {
+        type: String
+    }
    
 },
  {

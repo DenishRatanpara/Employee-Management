@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import DepartmentButton from "../../utils/DepartmentButton";
-import axios from "axios";
+import api from "../../../api";
 
 const DepartmentList = () => {
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ const DepartmentList = () => {
   useEffect(() => {
     const fetchDepartment = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/department/get",
+        const response = await api.get(
+          "/department/get",
 
           {
             headers: {

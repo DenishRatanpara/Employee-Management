@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Plus } from "lucide-react";
 import EmployeeButton from "../../utils/EmployeeHelper";
-import axios from "axios";
+import api from "../../../api";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const EmployeeList = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/employee", {
+        const response = await api.get("/employee", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const EmployeeList = () => {
             _id: emp._id,
             empname: emp.userId?.name || "N/A",
             dob: new Date(emp.dob).toDateString() || "N/A",
-            profileImage: `http://localhost:4000/${
+            profileImage: `http://localhost:5000/${
               emp.userId?.profileImage || ""
             }`,
 

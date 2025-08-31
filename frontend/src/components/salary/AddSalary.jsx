@@ -223,7 +223,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchDepartments, getEmployees } from "../../utils/EmployeeHelper";
-import axios from "axios";
+import api from "../../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -297,8 +297,8 @@ const AddSalary = () => {
         payDate: formData.payDate,
       };
 
-      const res = await axios.post(
-        "http://localhost:4000/salary/add",
+      const res = await api.post(
+        "/salary/add",
         payload,
         {
           headers: {

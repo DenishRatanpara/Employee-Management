@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import api from "../../../api";
 
 const ShowSalary = () => {
   const [salary, setSalary] = useState([]);
@@ -27,7 +27,7 @@ const ShowSalary = () => {
   useEffect(() => {
     const fetchSalary = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/salary/show/${id}`);
+        const res = await api.get(`/salary/show/${id}`);
         console.log(res.data.salary);
         if (res.data && res.data.salary) {
           setSalary(res.data.salary);

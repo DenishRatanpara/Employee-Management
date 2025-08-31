@@ -1,15 +1,15 @@
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../api";
 
 const DepartmentButton = ({ id, handleDelete }) => {
   const navigate = useNavigate();
 
   const handleOnDelete = async ({ id }) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:4000/department/delete/${id}`,
+      const response = await api.delete(
+        `/department/delete/${id}`,
 
         {
           headers: {

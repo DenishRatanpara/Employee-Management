@@ -1,11 +1,11 @@
-import axios from "axios";
 import { Eye, Pencil, DollarSign, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
 // Fetch all departments from backend
 export const fetchDepartments = async () => {
   try {
-    const response = await axios.get("http://localhost:4000/department/get", {
+    const response = await api.get("/department/get", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
@@ -29,8 +29,8 @@ export const fetchDepartments = async () => {
 
 export const getEmployees = async (id) => {
   try {
-    const response = await axios.get(
-      `http://localhost:4000/employee/department/${id}`,
+    const response = await api.get(
+      `/employee/department/${id}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../../api";
 import { useAuth } from "../../context/AuthProvider";
 
 const Navbar = () => {
@@ -7,9 +7,23 @@ const Navbar = () => {
   const token = localStorage.getItem("token");
   const { user } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // localStorage.removeItem("token");
+    // window.location.href = "/"; // Or use navigate("/") if using react-router
+
+     try {
+    await api.post("/users/logout", {}, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+  } finally {
     localStorage.removeItem("token");
-    window.location.href = "/"; // Or use navigate("/") if using react-router
+    window.location.href = "/"; // or navigate("/") if using react-router
+  }
   };
 
   // useEffect(() => {

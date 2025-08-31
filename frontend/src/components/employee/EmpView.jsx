@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../../../api";
 import "./EmpView.css"; // 👈 Import external CSS
 
 const EmpView = () => {
@@ -10,8 +10,8 @@ const EmpView = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/employee/${id}`,
+        const response = await api.get(
+          `/employee/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -49,7 +49,7 @@ const EmpView = () => {
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center gap-8">
           <img
-            src={`http://localhost:4000/${
+            src={`http://localhost:5000/${
               employee.userId?.profileImage || "default.jpg"
             }`}
             alt="Employee"

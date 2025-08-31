@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from '../../api.js'
 import { useAuth } from "../context/AuthProvider";
 
 import { useNavigate } from "react-router-dom";
@@ -17,13 +17,13 @@ const Login = () => {
 
     try {
       setError(null);
-      const res = await axios.post("http://localhost:4000/users/login", {
-        email,
-        password,
-      });
+      const res = await api.post(
+        "/users/login",
+        { email, password },
+        { withCredentials: true }
+      );
       console.log(res.data);
       login(res.data.user);
-      localStorage.setItem("token", res.data.token);
       if (res.data.user.role === "admin") {
         navigate("/admin");
       } else {
