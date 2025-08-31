@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://employee-management-n56p.onrender.com",
     withCredentials: true
 })
 
