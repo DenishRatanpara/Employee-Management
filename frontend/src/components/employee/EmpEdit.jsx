@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-<<<<<<< HEAD
+
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 import api from "../../../api";
-=======
+
 
 import axios from "axios";
-import { fetchDepartments } from "../../utils/EmployeeHelper";
->>>>>>> 4bb929cc08404bbaadf32b02a88520d0ae01e6f8
+
+
 
 const EmpEdit = () => {
   const [departments, setDepartments] = useState([]);
@@ -85,7 +85,7 @@ const EmpEdit = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:4000/employee/update/${id}`,
+        `/employee/update/${id}`,
         formData, // send JSON
         {
           headers: {
