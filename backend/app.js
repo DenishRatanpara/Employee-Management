@@ -23,9 +23,8 @@ const app = express();
 
 // Middleware
 app.use(cookieParser());
-import cors from "cors";
-import dotenv from "dotenv";
-dotenv.config();
+
+
 
 app.use(
   cors({
