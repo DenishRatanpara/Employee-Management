@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthProvider";
+import api from "../../../api";
 
 const LeaveList = () => {
   const [search, setSearch] = useState("");
@@ -14,8 +14,8 @@ const LeaveList = () => {
   useEffect(() => {
     const fetchLeaves = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/leave/show/${user._id}`,
+        const response = await api.get(
+          `/leave/show/${user._id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

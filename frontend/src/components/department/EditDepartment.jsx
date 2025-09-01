@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from '../../../api'
 
 const EditDepartment = () => {
   const navigate = useNavigate();
@@ -39,8 +39,8 @@ const EditDepartment = () => {
   useEffect(() => {
     const fetchDepartment = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/department/get",
+        const response = await api.get(
+          "/department/get",
 
           {
             headers: {
@@ -79,8 +79,8 @@ const EditDepartment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(
-        `http://localhost:4000/department/update/${id}`,
+      const response = await api.put(
+        `/department/update/${id}`,
         departments,
         {
           headers: {

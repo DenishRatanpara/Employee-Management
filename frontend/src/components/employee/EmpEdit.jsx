@@ -4,11 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
 import api from "../../../api";
 
-
-import axios from "axios";
-
-
-
 const EmpEdit = () => {
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState(null);
@@ -84,7 +79,7 @@ const EmpEdit = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `/employee/update/${id}`,
         formData, // send JSON
         {
