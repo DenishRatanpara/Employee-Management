@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 
 
 const empSchema = new mongoose.Schema({
-  userId: { type:mongoose. Schema.Types.ObjectId, ref: 'User', required: true },
+  name: {
+    type: String
+  },
+  userId: { type:mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   employeeId: { type: String, required: true },
   dob: { type: Date, required: true },
   gender: { type: String, required: true },
