@@ -7,6 +7,8 @@ export const LoginController = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("req.bidy", req.body);
+    
     const user = await userModel.findOne({ email });
 
     if (!user) {
