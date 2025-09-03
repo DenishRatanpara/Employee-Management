@@ -173,7 +173,7 @@ const EmpEdit = () => {
                 <option value="">Select Department</option>
                 {departments.map((dep) => (
                   <option key={dep._id} value={dep._id}>
-                    {dep.name}
+                    {dep.departmentName}
                   </option>
                 ))}
               </select>

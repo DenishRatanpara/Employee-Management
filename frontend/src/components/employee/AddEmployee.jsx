@@ -1,8 +1,6 @@
-
-
 import React, { useState, useEffect } from "react";
 import { fetchDepartments } from "../../utils/EmployeeHelper";
-import api from "../../../api";
+import api from "../../../api.js";
 import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
@@ -20,9 +18,11 @@ const AddEmployee = () => {
     employeeId: "",
     password: "",
     address: "",
-    photo: null,
+    profileImage: null,
   });
 
+  // console.log("form data: ", formData);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +30,7 @@ const AddEmployee = () => {
       try {
         const data = await fetchDepartments();
         setDepartments(data);
+        // console.log("fetch department: ", data);
       } catch (error) {
         console.error("Failed to fetch departments:", error);
       }
@@ -37,16 +38,19 @@ const AddEmployee = () => {
     getDepartment();
   }, []);
 
+  
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "photo" && files?.length > 0) {
-      setFormData({ ...formData, photo: files[0] });
+
+    if (name === "profileImage" && files?.length > 0) {
+      setFormData({ ...formData, profileImage: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-   const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataObj = new FormData();
 
@@ -54,17 +58,14 @@ const AddEmployee = () => {
       formDataObj.append(key, formData[key]);
     });
 
+
     try {
-      const response = await api.post(
-        "/employee/add",
-        formDataObj,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await api.post("/employee/add", formDataObj, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       console.log("Employee created successfully:", response.data);
       navigate("/admin/employee");
@@ -72,7 +73,6 @@ const AddEmployee = () => {
       console.error("Error adding employee:", error);
     }
   };
-
 
   return (
     <div className="bg-gray-100 flex items-center justify-center">
@@ -180,7 +180,7 @@ const AddEmployee = () => {
                 <option value="">Select Department</option>
                 {departments.map((dep) => (
                   <option key={dep._id} value={dep._id}>
-                    {dep.name}
+                    {dep.departmentName}
                   </option>
                 ))}
               </select>
@@ -291,7 +291,7 @@ const AddEmployee = () => {
               </label>
               <input
                 type="file"
-                name="photo"
+                name="profileImage"
                 accept="image/*"
                 onChange={handleChange}
                 className="w-full text-gray-700"
