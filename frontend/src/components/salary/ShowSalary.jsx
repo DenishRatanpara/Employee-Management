@@ -54,7 +54,7 @@ const ShowSalary = () => {
           <span className="font-semibold">
             {salary[0]?.employeeId?.employeeId || "Unknown"}
           </span>{" "}
-          (ID: {salary[0]?._id || "N/A"})
+          {/* (ID: {salary[0]?._id || "N/A"}) */}
         </p>
       </div>
 

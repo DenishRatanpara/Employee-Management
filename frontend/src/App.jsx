@@ -67,6 +67,7 @@ function App() {
           <Route path="/emp/profile/:id" element={<EmpView />} />
           <Route path="/emp/leave/" element={<LeaveList />} />
           <Route path="/emp/add-leave" element={<AddLeave />} />
+             <Route path="/emp/salary/:id" element={<ShowSalary />} />
         </Route>
       </Routes>
     </BrowserRouter>

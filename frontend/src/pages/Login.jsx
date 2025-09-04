@@ -21,10 +21,12 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      console.log(res.data);
-
+      
+      
       // ✅ Save user + token in context + localStorage
-      login(res.data.user, res.data.token);
+      login(res.data.user, res.data.employee,  res.data.token);
+      
+      console.log("sdsdffds" ,res.data);
 
       // ✅ Redirect based on role
       if (res.data.user.role === "admin") {
