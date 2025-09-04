@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Calendar, FileText } from "lucide-react";
-import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useAuth } from "../../context/AuthProvider";
 import { Navigate, useNavigate } from "react-router-dom";
+import api from "../../../api";
 
 const AddLeave = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const AddLeave = () => {
         userId: user?._id, // ✅ logged-in user ID
       };
 
-      await axios.post("http://localhost:4000/leave/add-leave", payload, {
+      await api.post("/leave/add-leave", payload, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -6,20 +6,25 @@ const UserContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
- 
-
+  
+  
   // ✅ Clear user + token on logout
   const logout = () => {
-     const navigate = useNavigate();
+    const navigate = useNavigate();
     setUser(null);
+    setEmployee(null)
     localStorage.removeItem("token");
     navigate("/"); // redirect to login
   };
 
   // ✅ Save user + token on login
-  const login = (user, token) => {
+  const login = (user, employee, token) => {
     setUser(user);
+    setEmployee(employee)
+    console.log(employee);
+    
     if (token) {
       localStorage.setItem("token", token);
     }
@@ -67,8 +72,22 @@ const AuthProvider = ({ children }) => {
     verifyUser();
   }, []);
 
+  // useEffect(() => {
+  // const fetchEmployee = async () => {
+  //   if (!user) return; // only run if user exists
+  //   try {
+  //     const response = await api.get(`/employees/${user.employeeId}`);
+  //     setEmployee(response.data || null);
+  //   } catch {
+  //     setEmployee(null);
+  //   }
+  // };
+
+//   fetchEmployee();
+// }, [user]);
+
   return (
-    <UserContext.Provider value={{ user, login, logout, loading }}>
+    <UserContext.Provider value={{ user, employee, login, logout, loading }}>
       {children}
     </UserContext.Provider>
   );

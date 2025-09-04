@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
-    "http://localhost:5173", // for local dev
+    process.env.CORS_ORIGIN, // for local dev
     "https://employee-management-frontend-ekvj.onrender.com" // deployed frontend
   ],
   credentials: true, // if you are sending cookies or authorization headers

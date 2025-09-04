@@ -1,6 +1,7 @@
 import Employee from "../models/emp.model.js";
 import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import { uploadToCloudinary } from "../utils/cloudiary.utils.js";
 
 export const EmpAddController = async (req, res) => {
   try {
@@ -16,27 +17,52 @@ export const EmpAddController = async (req, res) => {
       salary,
       phone,
       password,
-    } = req.body;
+    } = req.body || {};
 
+    // console.log("body", req.body);
+    
     // Check for required fields
-    if (
-      !name || !email || !password || !role ||
-      !employeeId || !dob || !gender ||
-      !designation || !department || !salary
-    ) {
-      return res.status(400).json({
-        success: false,
-        error: "All fields are required.",
-      });
-    }
+      if (
+        !name || !email || !password || !role ||
+        !employeeId || !dob || !gender ||
+        !designation || !department || !salary
+      ) {
+        return res.status(400).json({
+          success: false,
+          error: "All fields are required.",
+        });
+      }
+    
 
-    // Check if user already exists
+    // Check if user already exists  
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
         error: "User already exists with this email.",
       });
+    }
+
+
+    // cloudinary localFilePath upload
+    const image = req.file?.path
+
+    // console.log("this multer image", req.file);
+
+    if(!image){
+      return res.status(401).json({
+        message: "profile picture is required"
+      })
+    }
+    
+    const profileImage = await uploadToCloudinary(image)
+
+    // console.log("profile img: ", profileImage);
+
+    if(!profileImage){
+      return res.status(400).json({
+        message: "error while uploading"
+      })
     }
 
     // Hash password
@@ -48,13 +74,14 @@ export const EmpAddController = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      profileImage: req.file ? req.file.filename : "", // Make sure multer is setup correctly
+      profileImage: profileImage?.url //req.file ? req.file.filename : "", // Make sure multer is setup correctly
     });
 
     const savedUser = await newUser.save();
-
+    
     // Create employee record
     const newEmployee = new Employee({
+      name,
       userId: savedUser._id,
       employeeId,
       dob,
@@ -67,7 +94,7 @@ export const EmpAddController = async (req, res) => {
 
     await newEmployee.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Employee created successfully",
     });

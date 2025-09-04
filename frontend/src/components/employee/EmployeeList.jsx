@@ -39,8 +39,8 @@ const EmployeeList = () => {
             _id: emp._id,
             empname: emp.userId?.name || "N/A",
             dob: new Date(emp.dob).toDateString() || "N/A",
-            profileImage: `http://localhost:5000/${
-              emp.userId?.profileImage || ""
+            profileImage: `${
+              emp.userId?.profileImage || "default.jpg"
             }`,
 
             department: emp.department.departmentName || "N/A",

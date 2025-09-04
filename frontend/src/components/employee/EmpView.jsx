@@ -49,7 +49,7 @@ const EmpView = () => {
         {/* Profile Header */}
         <div className="flex flex-col sm:flex-row items-center gap-8">
           <img
-            src={`http://localhost:5000/${
+            src={`${
               employee.userId?.profileImage || "default.jpg"
             }`}
             alt="Employee"

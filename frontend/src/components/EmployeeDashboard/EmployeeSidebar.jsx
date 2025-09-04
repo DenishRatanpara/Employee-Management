@@ -14,6 +14,8 @@ import { useAuth } from "../../context/AuthProvider";
 const EmployeeSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
+  const { employee } = useAuth();
+  console.log(employee)
 
   const menuItems = [
     {
@@ -34,7 +36,7 @@ const EmployeeSidebar = () => {
     {
       name: "My Salary",
       icon: <WalletIcon size={20} />,
-      to: "/emp/salary",
+      to: `/emp/salary/${employee._id}`,
     },
     {
       name: "Settings",
