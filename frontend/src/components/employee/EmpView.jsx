@@ -22,6 +22,7 @@ const EmpView = () => {
 
         if (response.status === 200) {
           setEmployee(response.data.employee);
+         
         } else {
           console.error("Failed to fetch employee");
         }

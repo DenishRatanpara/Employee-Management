@@ -2,7 +2,71 @@ import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userMiddleware from "../middlewares/user.middleware.js";
+import Employee from "../models/user.model.js";
 
+// export const LoginController = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+
+//     const user = await userModel.findOne({ email });
+
+//     if (!user) {
+//       res.status(404).json({ message: "User not found" });
+//     }
+
+//     const isValidPassword = await bcrypt.compare(password, user.password);
+//     if (!isValidPassword) {
+//       res.status(401).json({ message: "Invalid password" });
+//     }
+//     const token = jwt.sign(
+//       { _id: user._id, role: user.role },
+//       process.env.JWT_SECRET,
+//       {
+//         expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+//       }
+//     );
+
+//     const refreshToken = jwt.sign(
+//       {
+//         _id: user._id,
+//       },
+//       process.env.REFRESH_TOKEN_SECRET,
+//       {
+//         expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+//       }
+//     );
+
+//     user.refreshToken = refreshToken;
+//     user.save();
+
+//     const options = {
+//       httpOnly: true,
+//       secure: false, // must be false since localhost is not HTTPS
+//         sameSite: "lax", // works fine for dev
+//       //   path: "/",
+//     };
+
+//     res
+//       .status(200)
+//       .cookie("accessToken", token, options)
+//       .cookie("refreshToken", refreshToken, options)
+//       .json({
+//         message: "Login successful",
+//         token,
+//         user: {
+//           _id: user._id,
+//           name: user.name,
+//           email: user.email,
+//           role: user.role,
+//         },
+//       });
+
+//     console.log("access token: ", req.cookies.accessToken);
+//     console.log("refresh token: ", req.cookies.refreshToken);
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 export const LoginController = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -10,39 +74,36 @@ export const LoginController = async (req, res) => {
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      res.status(401).json({ message: "Invalid password" });
+      return res.status(401).json({ message: "Invalid password" });
     }
+
     const token = jwt.sign(
       { _id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-      }
+      { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
 
     const refreshToken = jwt.sign(
-      {
-        _id: user._id,
-      },
+      { _id: user._id },
       process.env.REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-      }
+      { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
     );
 
     user.refreshToken = refreshToken;
-    user.save();
+    await user.save();
+
+    // ✅ Correct query
+    const employee = await Employee.findOne({ userId: user._id }).populate("department");
 
     const options = {
       httpOnly: true,
-      secure: false, // must be false since localhost is not HTTPS
-        sameSite: "lax", // works fine for dev
-      //   path: "/",
+      secure: false, // keep false for localhost
+      sameSite: "lax",
     };
 
     res
@@ -58,14 +119,14 @@ export const LoginController = async (req, res) => {
           email: user.email,
           role: user.role,
         },
+        employee: employee  // ✅ now should not be null
       });
-
-    console.log("access token: ", req.cookies.accessToken);
-    console.log("refresh token: ", req.cookies.refreshToken);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+
 
 export const LogoutController = async (req, res) => {
   await userModel.findByIdAndUpdate(

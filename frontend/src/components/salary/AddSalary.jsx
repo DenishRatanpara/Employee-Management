@@ -319,7 +319,7 @@ const AddSalary = () => {
           progress: undefined,
         });
 
-        setTimeout(() => navigate("/salary/show"), 3000); // navigate after 3s
+       // navigate after 3s
       } else {
         setError("Failed to add salary. Try again.");
       }
