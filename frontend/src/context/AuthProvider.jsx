@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
   const login = (user, employee, token) => {
     setUser(user);
     setEmployee(employee)
-    console.log(employee);
+    // console.log(employee);
     
     if (token) {
       localStorage.setItem("token", token);
@@ -63,28 +63,16 @@ const AuthProvider = ({ children }) => {
       try {
         const response = await api.get("/users/verify");
         setUser(response.data.user || null);
+        setEmployee(response.data.employee || null);
       } catch {
         setUser(null);
+        setEmployee(null)
       } finally {
         setLoading(false);
       }
     };
     verifyUser();
   }, []);
-
-  // useEffect(() => {
-  // const fetchEmployee = async () => {
-  //   if (!user) return; // only run if user exists
-  //   try {
-  //     const response = await api.get(`/employees/${user.employeeId}`);
-  //     setEmployee(response.data || null);
-  //   } catch {
-  //     setEmployee(null);
-  //   }
-  // };
-
-//   fetchEmployee();
-// }, [user]);
 
   return (
     <UserContext.Provider value={{ user, employee, login, logout, loading }}>

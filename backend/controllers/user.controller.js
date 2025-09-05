@@ -210,3 +210,5 @@ export const verify = async (req, res) => {
     message: "User verified successfully",
   });
 };
+
+

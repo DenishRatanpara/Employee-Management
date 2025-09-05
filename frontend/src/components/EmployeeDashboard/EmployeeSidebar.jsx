@@ -15,7 +15,7 @@ const EmployeeSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const { employee } = useAuth();
-  console.log(employee)
+  console.log("emp data: ", employee)
 
   const menuItems = [
     {

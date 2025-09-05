@@ -7,6 +7,8 @@ const ShowSalary = () => {
   const [search, setSearch] = useState("");
   const { id } = useParams();
 
+  // console.log(id);
+  
   // Format date as "12 Aug 2025"
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
@@ -28,8 +30,8 @@ const ShowSalary = () => {
     const fetchSalary = async () => {
       try {
         const res = await api.get(`/salary/show/${id}`);
-        console.log(res.data.salary);
-        if (res.data && res.data.salary) {
+        // console.log(res.data.salary);
+        if (res.data && res.data.salary){
           setSalary(res.data.salary);
         } else {
           setSalary([]);

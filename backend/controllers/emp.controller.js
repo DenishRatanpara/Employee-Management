@@ -57,7 +57,7 @@ export const EmpAddController = async (req, res) => {
     
     const profileImage = await uploadToCloudinary(image)
 
-    // console.log("profile img: ", profileImage);
+    console.log("profile img: ", profileImage);
 
     if(!profileImage){
       return res.status(400).json({
