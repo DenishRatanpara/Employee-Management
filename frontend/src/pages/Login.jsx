@@ -108,7 +108,7 @@
 
 // export default Login;
 import React, { useState } from "react";
-import api from "../../api";
+import api from "../../api.js";
 import { useAuth } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -131,10 +131,12 @@ const Login = () => {
         { withCredentials: true }
       );
 
-      console.log("🔹 Login response:", res.data);
-
-      // ✅ Save user + employee + token in context
-      login(res.data.user, res.data.employee, res.data.token);
+      
+      
+      // ✅ Save user + token in context + localStorage
+      login(res.data.user, res.data.employee,  res.data.token);
+      
+      console.log("sdsdffds" ,res.data);
 
       // ✅ Redirect based on role
       if (res.data.user.role === "admin") {

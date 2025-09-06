@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import api from "../../../api";
 
 
-const ShowSalary = () => {
+const SalaryHistory = () => {
   const [salary, setSalary] = useState([]);
   const [search, setSearch] = useState("");
   const { id } = useParams();
@@ -30,7 +30,7 @@ const ShowSalary = () => {
   useEffect(() => {
     const fetchSalary = async () => {
       try {
-        const res = await api.get(`/salary/show/${id}`);
+        const res = await api.get(`/salary/user-salary/${id}`);
         console.log(res.data.salary);
 
         if (Array.isArray(res.data)) {
@@ -143,4 +143,4 @@ const ShowSalary = () => {
   );
 };
 
-export default ShowSalary;
+export default SalaryHistory;

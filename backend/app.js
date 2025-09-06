@@ -12,6 +12,7 @@ import addDepartment from "./routes/department.js";
 import salaryRouter from "./routes/salary.js";
 import empRouter from "./routes/emp.js";
 import leaveRouter from "./routes/leave.js";
+import setting from "./routes/setting.js";
 
 dotenv.config();
 
@@ -28,8 +29,9 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
-    "http://localhost:5173", // for local dev
-    "https://employee-management-frontend-ekvj.onrender.com" // deployed frontend
+    process.env.CORS_ORIGIN, // for local dev
+    "https://employee-management-frontend-ekvj.onrender.com",
+  // deployed frontend
   ],
   credentials: true, // if you are sending cookies or authorization headers
 }));
@@ -47,5 +49,6 @@ app.use("/department", addDepartment);
 app.use("/employee", empRouter);
 app.use("/salary", salaryRouter);
 app.use("/leave", leaveRouter);
+app.use("/settings", setting);
 
 export default app;

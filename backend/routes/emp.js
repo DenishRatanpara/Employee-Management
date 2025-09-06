@@ -7,7 +7,7 @@ import verifyUser from "../middlewares/user.middleware.js";
 
 const router =express.Router();
 
-router.post('/add',verifyUser,upload.single("photo"),empController.EmpAddController)
+router.post('/add',verifyUser,upload.single("profileImage"),empController.EmpAddController)
 router.get('/',verifyUser,empController.getEmployeeController)
 router.get('/:id',verifyUser,empController.ShowEmployeeController)
 router.put('/update/:id',verifyUser,empController.EmpUpdateController)

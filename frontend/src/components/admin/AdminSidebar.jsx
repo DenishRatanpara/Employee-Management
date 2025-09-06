@@ -10,9 +10,12 @@ import {
   MenuIcon,
   XIcon,
 } from "lucide-react";
+import { useAuth } from "../../context/AuthProvider";
 
 const AdminSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth()
+  console.log({user})
 
   const menuItems = [
     { name: "Dashboard", icon: <HomeIcon size={20} />, to: "/admin/dashboard" },

@@ -1,6 +1,6 @@
 import { Eye, Pencil, DollarSign, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api";
+import api from "../../api.js";
 
 // Fetch all departments from backend
 export const fetchDepartments = async () => {
@@ -15,7 +15,7 @@ export const fetchDepartments = async () => {
     if (response.status === 200) {
       return response.data.map((dep) => ({
         _id: dep._id,
-        name: dep.departmentName,
+        departmentName: dep.departmentName,
       }));
     } else {
       console.error("Failed to fetch departments");

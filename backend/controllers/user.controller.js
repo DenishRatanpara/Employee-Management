@@ -1,13 +1,16 @@
 import userModel from "../models/user.model.js";
+import Employee from "../models/emp.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userMiddleware from "../middlewares/user.middleware.js";
-import Employee from "../models/user.model.js";
+
 
 // export const LoginController = async (req, res) => {
 //   try {
 //     const { email, password } = req.body;
 
+//     // console.log("req.body", req.body);
+    
 //     const user = await userModel.findOne({ email });
 
 //     if (!user) {
@@ -46,6 +49,10 @@ import Employee from "../models/user.model.js";
 //       //   path: "/",
 //     };
 
+
+//     // set the employee model
+//     const employee = await Employee.findOne({userId: user._id})
+
 //     res
 //       .status(200)
 //       .cookie("accessToken", token, options)
@@ -59,10 +66,13 @@ import Employee from "../models/user.model.js";
 //           email: user.email,
 //           role: user.role,
 //         },
+//         employee: {
+//           _id:employee._id
+//         },
 //       });
 
-//     console.log("access token: ", req.cookies.accessToken);
-//     console.log("refresh token: ", req.cookies.refreshToken);
+//     // console.log("access token: ", req.cookies.accessToken);
+//     // console.log("refresh token: ", req.cookies.refreshToken);
 //   } catch (error) {
 //     res.status(400).json({ message: error.message });
 //   }
@@ -72,7 +82,6 @@ export const LoginController = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await userModel.findOne({ email });
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -97,14 +106,15 @@ export const LoginController = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    // ✅ Correct query
-    const employee = await Employee.findOne({ userId: user._id }).populate("department");
-
     const options = {
       httpOnly: true,
-      secure: false, // keep false for localhost
+      secure: false,
       sameSite: "lax",
     };
+
+    // ✅ Correct employee lookup
+    const employee = await Employee.findOne({ userId: user._id });
+  
 
     res
       .status(200)
@@ -119,7 +129,9 @@ export const LoginController = async (req, res) => {
           email: user.email,
           role: user.role,
         },
-        employee: employee  // ✅ now should not be null
+        employee: {
+          _id: employee?._id || null, // Handle case where employee might not exist
+        } // avoid crash if not found
       });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -201,6 +213,7 @@ export const refreshAccessToken = async (req, res) => {
 export const verify = async (req, res) => {
   return res.status(200).json({
     user: req.user,
+    employee: req.employee,
     message: "User verified successfully",
   });
 };

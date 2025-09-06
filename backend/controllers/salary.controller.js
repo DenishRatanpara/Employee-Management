@@ -56,14 +56,17 @@ export const addSalaryController = async (req, res) => {
 };
 // export const showSalaryController = async (req, res) => {
 //   const { id } = req.params;
+//   console.log("ID:", id);
 //   try {
 //     let salaryDetail = await salaryModel
 //       .find({ employeeId: id })
 //       .populate("employeeId", "employeeId");
+//       console.log("Salary Detail:", salaryDetail);
       
 
 //     if (!salaryDetail || salaryDetail.length < 1) {
 //       const employee = await Employee.findOne({ userId: id });
+//       console.log("Employee:", employee);
 //       if (!employee) {
 //         return res.status(404).json({ message: "Employee not found" });
 //       }
@@ -80,31 +83,17 @@ export const addSalaryController = async (req, res) => {
 // };
 
 export const showSalaryController = async (req, res) => {
-  const { id } = req.params; // can be employeeId or userId
-    console.log("📩 Received ID from params:", id);
-
+  const { id } = req.params;
+  console.log("ID:", id);
   try {
-    // 1️⃣ First try: assume id is an employeeId (_id of Employee collection)
+    // Try to find salary by employeeId first
     let salaryDetail = await salaryModel
-      .find({ employeeId: id })
-      .populate("employeeId", "employeeId");
-      console.log()
+      .find({ employeeId: id }) // salary document has employeeId
+      .populate("employeeId", "name email employeeId"); // populate fields
+    console.log("Salary Detail:", salaryDetail);
 
-    // 2️⃣ If nothing found, try treating id as userId (lookup Employee first)
-    if (!salaryDetail || salaryDetail.length < 1) {
-      const employee = await Employee.findOne({ userId: id });
-
-      if (!employee) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-
- salaryDetail = await salaryModel
-  .find({ employeeId: employee._id }) // ✅ correct usage
-  .populate("employeeId", "employeeId");
-
-    }
-    console.log("💰 Fetched Salary Details:", salaryDetail);
-    // 3️⃣ Return salary records
+    // If not found, try finding Employee by userId
+  
     res.status(200).json({ salary: salaryDetail });
   } catch (error) {
     console.error("Error fetching Employee:", error);
@@ -112,5 +101,41 @@ export const showSalaryController = async (req, res) => {
   }
 };
 
+export const ShowSalaryByUserId = async (req, res) => {
+  const { id } = req.params;
+  console.log("User ID:", id);
+
+  try {
+    // find employee using userId instead of _id
+    // const employee = await Employee.findOne({ userId: id });
+    // const employee = await Employee.find({});
+    // const employee = await Employee.populate('userId');
+    // console.log("Employee:", employee);
+
+    // if (!employee) {
+    //   return res.status(404).json({ message: "Employee not found" });
+    // }
+
+    // const salaryDetail = await salaryModel
+    //   .find({ employeeId: employee[0]._id }) 
+    //   .populate("employeeId", "name email employeeId");
+
+    // console.log("Salary detail:", salaryDetail);
+
+    // return res.status(200).json({ salary: salaryDetail });
+
+const salaries = await salaryModel.find()
+  .populate({
+    path: "employeeId",
+    match: { userId: new mongoose.Types.ObjectId(id) }, // filter by userId
+    populate: { path: "userId" } // optional: get user details too
+  });
+  console.log({salaries})
 
 
+    return res.status(200).json({ salary: salaries });
+  } catch (error) {
+    console.error("Error fetching Employee:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
