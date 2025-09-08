@@ -154,7 +154,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-800 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-700 via-blue-400 to-zinc-600 px-4 font-poppins">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Welcome Back
@@ -205,7 +205,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out"
+            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out cursor-pointer"
           >
             Sign In
           </button>
