@@ -82,44 +82,79 @@ export const addSalaryController = async (req, res) => {
 //   }
 // };
 
-export const showSalaryController = async (req, res) => {
-  const { id } = req.params;
-  console.log("ID:", id);
-  try {
-    // Try to find salary by employeeId first
-    let salaryDetail = await salaryModel
-      .find({ employeeId: id }) // salary document has employeeId
-      .populate("employeeId", "name email employeeId"); // populate fields
-    console.log("Salary Detail:", salaryDetail);
+// export const showSalaryController = async (req, res) => {
+//   const { id } = req.params;
+ 
+//   try {
+//     // Try to find salary by employeeId first
+//     let salaryDetail = await salaryModel
+//       .find({ employeeId: id }) // salary document has employeeId
+//       .populate("employeeId", "name email employeeId"); // populate fields
+//     console.log("Salary Detail:", salaryDetail);
 
-    // If not found, try finding Employee by userId
+//     // If not found, try finding Employee by userId
   
-    res.status(200).json({ salary: salaryDetail });
-  } catch (error) {
-    console.error("Error fetching Employee:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//     res.status(200).json({ salary: salaryDetail });
+//   } catch (error) {
+//     console.error("Error fetching Employee:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 
-export const ShowSalaryByUserId = async (req, res) => {
-  const { id } = req.params;
-  console.log("User ID:", id);
+// export const ShowSalaryByUserId = async (req, res) => {
+//   const { id } = req.params;
+//   console.log("User ID:", id);
 
-  try {
+//   try {
    
 
-const salaries = await salaryModel.find()
-  .populate({
-    path: "employeeId",
-    match: { userId: id}, 
-    populate: { path: "userId" } 
-  });
-  console.log({salaries})
+// const salaries = await salaryModel.findOne()
+//   .populate({
+//     path: "employeeId",
+//     match: { userId: id}, 
+//     populate: { path: "userId" } 
+//   });
+//   console.log({salaries})
 
 
-    return res.status(200).json({ salary: salaries });
+//     return res.status(200).json({ salary: salaries });
+//   } catch (error) {
+//     console.error("Error fetching Employee:", error);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+export const showSalary = async (req, res) => {
+  const { id } = req.params;
+  console.log("ID:", id);
+
+  try {
+    // Step 1: Try to find salary by employeeId
+    let salaryDetail = await salaryModel
+      .find({ employeeId: id }) // Direct employeeId match
+      .populate("employeeId", "name email userId");
+
+    if (salaryDetail && salaryDetail.length > 0) {
+      console.log("Found by employeeId:", salaryDetail);
+      return res.status(200).json({ salary: salaryDetail });
+    }
+
+    // Step 2: If not found, try by userId (through employee)
+    const salaryByUser = await salaryModel
+      .find()
+      .populate({
+        path: "employeeId",
+        match: { userId: id },
+        populate: { path: "userId", select: "name email" },
+      });
+
+    const filtered = salaryByUser.filter(s => s.employeeId); // remove null matches
+
+    console.log("Found by userId:", filtered);
+
+    return res.status(200).json({ salary: filtered });
   } catch (error) {
-    console.error("Error fetching Employee:", error);
+    console.error("Error fetching Salary:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
