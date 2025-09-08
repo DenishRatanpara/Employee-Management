@@ -106,29 +106,13 @@ export const ShowSalaryByUserId = async (req, res) => {
   console.log("User ID:", id);
 
   try {
-    // find employee using userId instead of _id
-    // const employee = await Employee.findOne({ userId: id });
-    // const employee = await Employee.find({});
-    // const employee = await Employee.populate('userId');
-    // console.log("Employee:", employee);
-
-    // if (!employee) {
-    //   return res.status(404).json({ message: "Employee not found" });
-    // }
-
-    // const salaryDetail = await salaryModel
-    //   .find({ employeeId: employee[0]._id }) 
-    //   .populate("employeeId", "name email employeeId");
-
-    // console.log("Salary detail:", salaryDetail);
-
-    // return res.status(200).json({ salary: salaryDetail });
+   
 
 const salaries = await salaryModel.find()
   .populate({
     path: "employeeId",
-    match: { userId: new mongoose.Types.ObjectId(id) }, // filter by userId
-    populate: { path: "userId" } // optional: get user details too
+    match: { userId: id}, 
+    populate: { path: "userId" } 
   });
   console.log({salaries})
 
