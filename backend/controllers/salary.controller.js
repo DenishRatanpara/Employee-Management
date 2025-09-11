@@ -129,9 +129,9 @@ export const showSalary = async (req, res) => {
   console.log("ID:", id);
 
   try {
-    // Step 1: Try to find salary by employeeId
+
     let salaryDetail = await salaryModel
-      .find({ employeeId: id }) // Direct employeeId match
+      .find({ employeeId: id })
       .populate("employeeId", "name email userId");
 
     if (salaryDetail && salaryDetail.length > 0) {
@@ -139,7 +139,7 @@ export const showSalary = async (req, res) => {
       return res.status(200).json({ salary: salaryDetail });
     }
 
-    // Step 2: If not found, try by userId (through employee)
+    
     const salaryByUser = await salaryModel
       .find()
       .populate({
@@ -148,7 +148,7 @@ export const showSalary = async (req, res) => {
         populate: { path: "userId", select: "name email" },
       });
 
-    const filtered = salaryByUser.filter(s => s.employeeId); // remove null matches
+    const filtered = salaryByUser.filter(s => s.employeeId); 
 
     console.log("Found by userId:", filtered);
 

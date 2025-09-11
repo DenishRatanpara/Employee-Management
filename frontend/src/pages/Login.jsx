@@ -153,8 +153,70 @@ const Login = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-800 px-4">
+ 
+  // return (
+
+  //   <div className="min-h-screen flex items-center justify-center bg-zinc-800 px-4">
+  //     <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+  //       <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+  //         Welcome Back
+  //       </h2>
+
+  //       {error && (
+  //         <div className="mb-4 text-red-600 text-sm font-medium text-center bg-red-100 p-2 rounded">
+  //           {error}
+  //         </div>
+  //       )}
+
+  //       <form onSubmit={handleSubmit} className="space-y-5">
+  //         <div>
+  //           <label
+  //             htmlFor="email"
+  //             className="block text-sm font-medium text-gray-700 mb-1"
+  //           >
+  //             Email
+  //           </label>
+  //           <input
+  //             value={email}
+  //             onChange={(e) => setEmail(e.target.value)}
+  //             type="email"
+  //             id="email"
+  //             className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-zinc-500"
+  //             placeholder="you@example.com"
+  //             required
+  //           />
+  //         </div>
+
+  //         <div>
+  //           <label
+  //             htmlFor="password"
+  //             className="block text-sm font-medium text-gray-700 mb-1"
+  //           >
+  //             Password
+  //           </label>
+  //           <input
+  //             value={password}
+  //             onChange={(e) => setPassword(e.target.value)}
+  //             type="password"
+  //             id="password"
+  //             className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-500"
+  //             placeholder="••••••••"
+  //             required
+  //           />
+  //         </div>
+
+  //         <button
+  //           type="submit"
+  //           className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out"
+  //         >
+  //           Sign In
+  //         </button>
+  //       </form>
+  //     </div>
+  //   </div>
+  // );
+return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-700 via-blue-400 to-zinc-600 px-4 font-poppins">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Welcome Back
@@ -205,7 +267,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out"
+            className="w-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transform text-white py-2 rounded-xl font-semibold transition duration-200 ease-in-out cursor-pointer"
           >
             Sign In
           </button>
@@ -213,6 +275,7 @@ const Login = () => {
       </div>
     </div>
   );
-};
+}
+;
 
 export default Login;
